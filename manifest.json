@@ -1,0 +1,13 @@
+{
+	"id": "photo-album",
+	"name": "Photo Album",
+	"version": "0.0.1",
+	"minAppVersion": "1.1.1",
+	"description": "Organize photo albums in your vault.",
+	"author": "Alexander Cheryomukhin",
+	"authorUrl": "https://github.com/solargate",
+	"fundingUrl": {
+		"DonationAlerts": "https://dalink.to/solargate"
+	},
+	"isDesktopOnly": false
+}

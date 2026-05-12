@@ -1,0 +1,1 @@
+# Obsidian Photo Album Plugin
