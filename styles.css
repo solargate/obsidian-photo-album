@@ -1,8 +1,38 @@
-/*
+/* Album container */
+.photo-album-container {
+	margin: 12px 0;
+}
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+.photo-album-title {
+	margin: 0 0 8px 0;
+	font-size: 1.1em;
+	font-weight: 600;
+}
 
-If your plugin does not need CSS, delete this file.
+/* Grid */
+.photo-album-grid {
+	display: grid;
+	grid-template-columns: repeat(var(--album-columns, 4), 1fr);
+	gap: 4px;
+}
 
-*/
+/* Each image item */
+.photo-album-item {
+	overflow: hidden;
+	border-radius: 4px;
+	background: var(--background-modifier-border);
+	cursor: pointer;
+}
+
+.photo-album-item img {
+	width: 100%;
+	height: 100%;
+	aspect-ratio: 1 / 1;
+	object-fit: cover;
+	display: block;
+	transition: opacity 0.15s ease;
+}
+
+.photo-album-item:hover img {
+	opacity: 0.85;
+}
