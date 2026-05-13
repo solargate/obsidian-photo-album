@@ -1,9 +1,7 @@
 import { Plugin } from 'obsidian';
 
 import { PhotoAlbumPluginSettings, PhotoAlbumSettingTab, DEFAULT_SETTINGS } from 'Settings';
-import { parseAlbumMeta } from 'AlbumParser';
-import { loadAlbumFiles } from 'AlbumLoader';
-import { createAlbumView } from 'AlbumView';
+import { Album } from 'Album';
 
 export default class PhotoAlbumPlugin extends Plugin {
 	settings: PhotoAlbumPluginSettings;
@@ -24,23 +22,8 @@ export default class PhotoAlbumPlugin extends Plugin {
 			if (!parentPre || parentPre.tagName !== 'PRE') return;
 
 			const text = codeEl.textContent || '';
-			const meta = parseAlbumMeta(text);
-			if (!meta) return;
-
-			const files = await loadAlbumFiles(
-				this.app,
-				this.settings.albumFolderPath,
-				meta.folder
-			);
-
-			if (files.length === 0) return;
-
-			const albumView = createAlbumView({
-				title: meta.title,
-				files,
-				columns: this.settings.columns,
-				app: this.app,
-			});
+			const albumView = await Album.renderFromText(this.app, text, this.settings.albumFolderPath, this.settings.columns);
+			if (!albumView) return;
 
 			albumView.addEventListener('click', (ev: MouseEvent) => {
 				const target = ev.target as HTMLElement;
