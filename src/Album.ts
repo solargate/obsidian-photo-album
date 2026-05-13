@@ -24,7 +24,7 @@ export interface AlbumViewOptions {
 const LINE_PATTERN = /^(\w+)\s*:\s*"([^"]*)"$/;
 const LINE_PATTERN_UNQUOTED = /^(\w+)\s*:\s*(.+)$/;
 
-function normalizePath(path: string): string {
+export function normalizePath(path: string): string {
 	return path.replace(/^\/+|\/+$/g, '');
 }
 

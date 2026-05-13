@@ -2,6 +2,8 @@ import { Plugin } from 'obsidian';
 
 import { PhotoAlbumPluginSettings, PhotoAlbumSettingTab, DEFAULT_SETTINGS } from 'Settings';
 import { Album } from 'Album';
+import { AlbumListModal } from 'AlbumListModal';
+import { AlbumInsert } from 'AlbumInsert';
 
 export default class PhotoAlbumPlugin extends Plugin {
 	settings: PhotoAlbumPluginSettings;
@@ -10,6 +12,26 @@ export default class PhotoAlbumPlugin extends Plugin {
 		await this.loadSettings();
 
 		this.addSettingTab(new PhotoAlbumSettingTab(this.app, this));
+
+		this.addCommand({
+			id: 'insert-photo-album',
+			name: 'Insert photo album',
+			editorCheckCallback: (checking, editor) => {
+				if (checking) {
+					return true;
+				}
+
+				new AlbumListModal(
+					this.app,
+					this.settings.albumFolderPath,
+					(folder) => {
+						AlbumInsert.insert(editor, { title: folder, folder });
+					}
+				).open();
+
+				return true;
+			},
+		});
 
 		this.registerMarkdownPostProcessor(async (el, ctx) => {
 			const codeEl = el.querySelector('code');
