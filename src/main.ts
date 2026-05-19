@@ -33,6 +33,26 @@ export default class PhotoAlbumPlugin extends Plugin {
 			},
 		});
 
+		this.addCommand({
+			id: 'insert-photo-album-in-callout',
+			name: 'Insert photo album in callout',
+			editorCheckCallback: (checking, editor) => {
+				if (checking) {
+					return true;
+				}
+
+				new AlbumListModal(
+					this.app,
+					this.settings.albumFolderPath,
+					(folder) => {
+						AlbumInsert.insertInCallout(editor, { title: folder, folder });
+					}
+				).open();
+
+				return true;
+			},
+		});
+
 		this.registerMarkdownPostProcessor(async (el, ctx) => {
 			const codeEl = el.querySelector('code');
 			if (!codeEl) return;
