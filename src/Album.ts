@@ -1,4 +1,6 @@
-import { App, TFile } from 'obsidian';
+import { App, Plugin, TFile } from 'obsidian';
+
+import { ThumbnailCache } from 'ThumbnailCache';
 
 const IMAGE_EXTENSIONS = new Set([
 	'.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp',
@@ -19,6 +21,8 @@ export interface AlbumViewOptions {
 	files: Array<{ path: string; mtime: number }>;
 	columns: number;
 	app: App;
+	plugin: Plugin;
+	cacheMap: Map<string, string>;
 }
 
 const LINE_PATTERN = /^(\w+)\s*:\s*"([^"]*)"$/;
@@ -98,8 +102,8 @@ export class Album {
 		return files;
 	}
 
-	static render(opts: AlbumViewOptions): HTMLDivElement {
-		const { title, files, columns, app } = opts;
+	static async render(opts: AlbumViewOptions): Promise<HTMLDivElement> {
+		const { title, files, columns, app, plugin, cacheMap } = opts;
 
 		const container = createDiv({
 			cls: 'photo-album-container',
@@ -136,11 +140,16 @@ export class Album {
 				},
 			});
 
-			const tfile = app.vault.getAbstractFileByPath(file.path) as TFile | null;
-			if (tfile) {
-				img.src = app.vault.adapter.getResourcePath(file.path);
+			const cacheUrl = cacheMap.get(file.path);
+			if (cacheUrl) {
+				img.src = cacheUrl;
 			} else {
-				img.src = '';
+				const tfile = app.vault.getAbstractFileByPath(file.path) as TFile | null;
+				if (tfile) {
+					img.src = app.vault.adapter.getResourcePath(file.path);
+				} else {
+					img.src = '';
+				}
 			}
 
 			item.addEventListener('click', () => {
@@ -151,18 +160,22 @@ export class Album {
 		return container;
 	}
 
-	static async renderFromText(app: App, text: string, albumFolderPath: string, columns: number): Promise<HTMLDivElement | null> {
+	static async renderFromText(app: App, text: string, albumFolderPath: string, columns: number, thumbnailSize: number, plugin: Plugin): Promise<HTMLDivElement | null> {
 		const meta = Album.parseMeta(text);
 		if (!meta) return null;
 
 		const files = await Album.loadFiles(app, albumFolderPath, meta.folder);
 		if (files.length === 0) return null;
 
+		const cacheMap = await ThumbnailCache.getOrGenerateThumbnails(plugin, app, meta.folder, files, thumbnailSize);
+
 		return Album.render({
 			title: meta.title,
 			files,
 			columns,
 			app,
+			plugin,
+			cacheMap,
 		});
 	}
 

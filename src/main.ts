@@ -44,7 +44,7 @@ export default class PhotoAlbumPlugin extends Plugin {
 			if (!parentPre || parentPre.tagName !== 'PRE') return;
 
 			const text = codeEl.textContent || '';
-			const albumView = await Album.renderFromText(this.app, text, this.settings.albumFolderPath, this.settings.columns);
+			const albumView = await Album.renderFromText(this.app, text, this.settings.albumFolderPath, this.settings.columns, this.settings.thumbnailSize, this);
 			if (!albumView) return;
 
 			albumView.addEventListener('click', (ev: MouseEvent) => {
