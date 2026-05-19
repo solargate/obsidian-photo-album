@@ -1,10 +1,7 @@
 import { App, Plugin, TFile } from 'obsidian';
 
 import { ThumbnailCache } from 'ThumbnailCache';
-
-const IMAGE_EXTENSIONS = new Set([
-	'.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp',
-]);
+import { IMAGE_EXTENSIONS } from 'Constants';
 
 export interface AlbumFile {
 	path: string;
@@ -103,7 +100,7 @@ export class Album {
 	}
 
 	static async render(opts: AlbumViewOptions): Promise<HTMLDivElement> {
-		const { title, files, columns, app, plugin, cacheMap } = opts;
+		const { title, files, columns, app, cacheMap } = opts;
 
 		const container = createDiv({
 			cls: 'photo-album-container',

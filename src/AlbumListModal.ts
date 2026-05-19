@@ -1,10 +1,7 @@
 import { App, SuggestModal } from 'obsidian';
 
 import { normalizePath } from 'Album';
-
-const IMAGE_EXTENSIONS = new Set([
-	'.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp',
-]);
+import { IMAGE_EXTENSIONS } from 'Constants';
 
 interface AlbumFolder {
 	name: string;

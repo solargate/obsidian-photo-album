@@ -1,7 +1,5 @@
 import { App, Plugin } from 'obsidian';
-
-const WEBP_QUALITY = 0.8;
-const CACHE_DIR_NAME = 'thumbnails';
+import { WEBP_QUALITY, CACHE_DIR_NAME } from 'Constants';
 
 function getPluginCacheDir(plugin: Plugin): string {
 	return plugin.manifest.dir + '/' + CACHE_DIR_NAME;
