@@ -56,8 +56,9 @@ export class ThumbnailCache {
 					reject(new Error('Failed to get canvas context'));
 					return;
 				}
-				ctx.fillStyle = '#ffffff';
-				ctx.fillRect(0, 0, size, size);
+				// Fill white background
+				//ctx.fillStyle = '#ffffff';
+				//ctx.fillRect(0, 0, size, size);
 				ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
 
 				canvas.toBlob(
