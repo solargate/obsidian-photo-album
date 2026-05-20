@@ -37,8 +37,8 @@ Supported image formats: `.jpg`, `.jpeg`, `.png`, `.gif`, `.webp`, `.bmp`
 
 Use the command palette (`Ctrl+P` / `Cmd+P`):
 
-- **Photo Album: Insert photo album** — inserts a photo album block at the cursor position
-- **Photo Album: Insert photo album in callout** — wraps the album in a collapsible callout
+- **Photo Album: Insert photo album** - inserts a photo album block at the cursor position
+- **Photo Album: Insert photo album in callout** - wraps the album in a collapsible callout
 
 Both commands open a searchable modal listing all album folders. Select one to insert the block.
 
@@ -67,11 +67,13 @@ You can also edit the `title` and `folder` values manually in source mode.
 | Setting | Description | Default |
 |---|---|---|
 | Albums folder path | Root folder containing album subfolders | `Albums` |
-| Columns | Number of photos per row (1–12) | `5` |
-| Thumbnail size (px) | Size of generated thumbnails (100–800) | `300` |
+| Columns | Number of photos per row (1-12) | `5` |
+| Thumbnail size (px) | Size of generated thumbnails (100-800) | `300` |
 
 Changing the thumbnail size regenerates the cache on the next album view.
 
 ## How it works
 
 The plugin scans the configured albums folder for subdirectories containing image files. When an album is inserted or previewed, it generates WebP thumbnails at the configured size and caches them in the plugin's data directory. Thumbnails are regenerated only when the original file changes or the cache is invalidated.
+
+Cached thumbnails are stored in the vault's `.obsidian/plugins/photo-album/thumbnails` folder. If needed, they can be deleted at any time and will be regenerated the next time the album is displayed.
