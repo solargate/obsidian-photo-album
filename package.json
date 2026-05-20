@@ -1,6 +1,6 @@
 {
 	"name": "photo-album",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"description": "Organize photo albums in your vault.",
 	"main": "main.js",
 	"scripts": {
