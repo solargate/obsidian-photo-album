@@ -89,7 +89,7 @@ export class ThumbnailCache {
 		}
 	}
 
-	static async getOrGenerateThumbnails(plugin: Plugin, app: App, folder: string, files: Array<{ path: string; mtime: number }>, thumbnailSize: number): Promise<Map<string, string>> {
+	static async getOrGenerateThumbnails(plugin: Plugin, app: App, folder: string, files: Array<{ path: string; mtime: number }>, thumbnailSize: number, onProgress?: (progress: number) => void): Promise<Map<string, string>> {
 		const cacheDir = this.getAlbumCacheDir(plugin, folder);
 		const success = await this.ensureCacheDir(app, cacheDir);
 		if (!success) return new Map();
@@ -108,11 +108,15 @@ export class ThumbnailCache {
 			}
 		}
 
-		for (const item of needGenerate) {
+		for (let i = 0; i < needGenerate.length; i++) {
+			const item = needGenerate[i];
 			const success = await this.generateThumbnail(app, item.originalPath, item.cachePath, thumbnailSize);
 			if (success) {
 				const cacheUrl = app.vault.adapter.getResourcePath(item.cachePath);
 				cacheMap.set(item.originalPath, cacheUrl);
+			}
+			if (onProgress) {
+				onProgress((i + 1) / needGenerate.length);
 			}
 		}
 

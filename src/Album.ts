@@ -157,14 +157,14 @@ export class Album {
 		return container;
 	}
 
-	static async renderFromText(app: App, text: string, albumFolderPath: string, columns: number, thumbnailSize: number, plugin: Plugin): Promise<HTMLDivElement | null> {
+	static async renderFromText(app: App, text: string, albumFolderPath: string, columns: number, thumbnailSize: number, plugin: Plugin, onProgress?: (progress: number) => void): Promise<HTMLDivElement | null> {
 		const meta = Album.parseMeta(text);
 		if (!meta) return null;
 
 		const files = await Album.loadFiles(app, albumFolderPath, meta.folder);
 		if (files.length === 0) return null;
 
-		const cacheMap = await ThumbnailCache.getOrGenerateThumbnails(plugin, app, meta.folder, files, thumbnailSize);
+		const cacheMap = await ThumbnailCache.getOrGenerateThumbnails(plugin, app, meta.folder, files, thumbnailSize, onProgress);
 
 		return Album.render({
 			title: meta.title,

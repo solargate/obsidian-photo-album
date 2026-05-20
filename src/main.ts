@@ -64,8 +64,25 @@ export default class PhotoAlbumPlugin extends Plugin {
 			if (!parentPre || parentPre.tagName !== 'PRE') return;
 
 			const text = codeEl.textContent || '';
-			const albumView = await Album.renderFromText(this.app, text, this.settings.albumFolderPath, this.settings.columns, this.settings.thumbnailSize, this);
-			if (!albumView) return;
+
+			const loadingEl = createDiv({ cls: 'photo-album-loading' });
+			loadingEl.createEl('div', { text: 'Thumbnail generation...', cls: 'photo-album-loading-text' });
+			const progressBar = loadingEl.createEl('progress', { cls: 'photo-album-progress' });
+			progressBar.max = 1;
+			progressBar.value = 0;
+			parentPre.replaceWith(loadingEl);
+
+			const onProgress = (p: number) => {
+				requestAnimationFrame(() => {
+					progressBar.value = p;
+				});
+			};
+
+			const albumView = await Album.renderFromText(this.app, text, this.settings.albumFolderPath, this.settings.columns, this.settings.thumbnailSize, this, onProgress);
+			if (!albumView) {
+				loadingEl.remove();
+				return;
+			}
 
 			albumView.addEventListener('click', (ev: MouseEvent) => {
 				const target = ev.target as HTMLElement;
@@ -75,7 +92,7 @@ export default class PhotoAlbumPlugin extends Plugin {
 				}
 			});
 
-			parentPre.replaceWith(albumView);
+			loadingEl.replaceWith(albumView);
 		});
 
 		console.log('Photo Album plugin loaded');
